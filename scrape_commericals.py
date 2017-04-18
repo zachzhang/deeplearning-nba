@@ -38,9 +38,14 @@ for url in video_urls:
 
     fn = './commericals/' + fn
 
-    r = requests.get(url)
+    try:
 
-    with open(fn + '.mp4', 'wb') as f:
-        f.write(r.content)
+        r = requests.get(url)
 
-    time.sleep(6)
+        with open(fn + '.mp4', 'wb') as f:
+            f.write(r.content)
+
+        time.sleep(18)
+
+    except:
+        pass

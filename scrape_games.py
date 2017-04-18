@@ -22,6 +22,11 @@ for i,game in enumerate(games):
 
     yt.set_filename( 'game_'+str(i))
 
-    video = yt.get('mp4')
+    print(yt.get_videos())
+    #yt.filter('mp4')[-1]
 
-    video.download('./games')
+    try:
+        video = yt.get('mp4')
+        video.download('./games')
+    except:
+        pass
