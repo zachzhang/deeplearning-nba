@@ -43,7 +43,7 @@ class ConvNet(torch.nn.Module):
         fc.add_module(module=nn.BatchNorm1d(512), name='bn_')
         fc.add_module(module=nn.Dropout(.5), name='drop')
         fc.add_module(module=nn.ReLU(), name='dense_relu')
-        fc.add_module(module=nn.Linear(512, 1), name='output')
+        fc.add_module(module=nn.Linear(512, 1 , bias = False), name='output')
         fc.add_module(module=nn.Sigmoid(), name='sigmoid')
 
         self.conv = conv
@@ -57,6 +57,4 @@ class ConvNet(torch.nn.Module):
         return y_hat
 
 
-model = ConvNet()
 
-model(Variable(torch.randn(32, 3, 50, 50))).size()

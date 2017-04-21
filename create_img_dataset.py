@@ -60,21 +60,19 @@ y = []
 for game in game_videos:
     
     
-    #check_size('./games/' + game)
     try:
         scaled = read_vid('./games/' + game, IMG_SIZE, SAMPLE_RATE )
         X.append(scaled)
-        y.append(np.ones(scaled.shape[0]))
+        y.append(np.ones((scaled.shape[0],1)))
     except:
         pass
 
 for com in com_videos:
 
-    #check_size('./commericals/' + com)
     try:
         scaled = read_vid('./commericals/' + com, IMG_SIZE, SAMPLE_RATE)
         X.append(scaled)
-        y.append(np.zeros(scaled.shape[0]))
+        y.append(np.zeros((scaled.shape[0],1)))
     except:
         pass
 
