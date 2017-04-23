@@ -4,7 +4,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --job-name=zachzhang
-#SBATCH --time=2:00:00
+#SBATCH --time=48:00:00
 
 
 module purge
@@ -14,7 +14,10 @@ module load opencv/intel/2.4.13.2
 
 cd /home/zz1409/deeplearning-nba
 
+
+python scrape_commerical2.py
+#python scrape_urls.py
 #python scrape_games.py
-python create_img_dataset.py
+#python create_img_dataset.py
 #python create_audio_files.py
 #python resize_videos.py

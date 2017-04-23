@@ -3,6 +3,66 @@ import requests
 import time
 from fake_useragent import UserAgent
 import pickle
+import skvideo.io
+import os
+from scipy.misc import imresize
+import numpy as np
+import cv2 as cv
+
+
+def download_video(url):
+
+    fn = url.split('/')[-1].split('mp4')[0]
+    fn = './commericals/' + fn + '.mp4'
+
+    written = True
+
+    try:
+        r = requests.get(url)
+        with open(fn, 'wb') as f:
+        
+            f.write(r.content)
+    
+        time.sleep(18)
+    except:
+        written = False
+    return fn,written
+
+
+def extract_features(file,size, sample_rate):
+
+    cap = cv.VideoCapture(file)
+    fps= int( cap.get(cv.cv.CV_CAP_PROP_FPS) )
+    length = int(cap.get(cv.cv.CV_CAP_PROP_FRAME_COUNT))
+    freq = fps // sample_rate
+
+    X = np.zeros((length // freq ,size[0] , size[1] ,3 ))
+    i = 0
+    j = 0
+
+    while(cap.isOpened()):
+                    
+        ret, frame = cap.read()
+
+        if ret==True:
+            if i % freq ==0:
+
+                X[j]  = imresize(frame,size)
+            
+                j+=1
+
+                if j >= X.shape[0]:
+            
+                    break
+
+                i+=1
+
+        else:
+            break
+
+    X = X.astype(np.float32)
+
+    return(X)
 
 proxies = [
     '138.128.225.235:80:zachproxy:zachariah36',
@@ -25,11 +85,17 @@ url_prefix = 'https://adland.tv/'
 
 pointer = 0
 
+IMG_SIZE= (50,50)
+
+cmd= 'ffmpeg -y -i {} -r 5 -s 50x50  {}'
+rm = 'rm {}'
+
+
 '''
 Get the urls of the right files first
 '''
 
-for i in range(200):
+for i in range(140):
 
     if i == 0:
         base_url = home_url
@@ -67,4 +133,19 @@ for i in range(200):
         pickle.dump(video_urls , open('video_urls.p','wb'))
 
         print(vid_file)
+
+        #DOWNLOAD THE VIDEO
+        fn , written = download_video(vid_file[0])
+
+        if written:
+            
+            #get the features
+            X = extract_features(fn,IMG_SIZE, sample_rate =1)
+
+            #save
+            np.save(fn.split('.mp4')[0] + '.npy' , X  )
+
+            #delete file
+            os.system(rm.format(fn))
+
         time.sleep(6)

@@ -45,6 +45,11 @@ for url in video_urls:
         with open(fn + '.mp4', 'wb') as f:
             f.write(r.content)
 
+        command = 'ffmpeg -y -i {} -vf scale=iw*.5:ih*.5 {}'
+        rm = 'rm {}'
+
+        
+
         time.sleep(18)
 
     except:
