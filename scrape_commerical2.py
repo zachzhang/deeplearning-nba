@@ -134,6 +134,9 @@ for i in range(140):
 
         print(vid_file)
 
+        if len(vid_file) == 0:
+            continue
+
         #DOWNLOAD THE VIDEO
         fn , written = download_video(vid_file[0])
 
