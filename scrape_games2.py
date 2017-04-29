@@ -48,59 +48,37 @@ def extract_features(file, size, sample_rate):
     return (X)
 
 
-games = [
-    'https://www.youtube.com/watch?v=WcvWtA1FP34',
-    'https://www.youtube.com/watch?v=9i0qBIqJeNs',
-    'https://www.youtube.com/watch?v=912zHQs1hAU',
-    'https://www.youtube.com/watch?v=I8hmXSVtnyc',
-    'https://www.youtube.com/watch?v=FLCTPqtqLYA',
-    'https://www.youtube.com/watch?v=WS0_Fr-o3bY',
-    'https://www.youtube.com/watch?v=SsmaRj4KQcs'
-]
-
-
 nba_replays = 'https://www.youtube.com/channel/UC0rDNVMafPWtpY63vFbxC3A/videos'
 html = requests.get(nba_replays)
 games = [ x.split('"')[0] for x in html.text.split('"/watch?v=')  ][1:]
 games = ['https://www.youtube.com/watch?v=' + x for x in games ]
 
-games= [games[1]]
-
 size = (50,50)
 
 rm = 'rm {}'
+j= 0
 
 for i,game in enumerate(games):
 
     written = True
-    yt = YouTube(game)
+   
+    if j > 30:
+        break
 
-    yt.set_filename('game_' + str(i))
-
-    print(yt.get_videos())
-    # yt.filter('mp4')[-1]
-    yt.filter('mp4')[0]
-
-    video = yt.get('mp4','360p')
-    video.download('./games')
-    print('here')
-
-    '''
     try:
         yt = YouTube(game)
 
         yt.set_filename( 'game_'+str(i))
 
-        print(yt.get_videos())
-        #yt.filter('mp4')[-1]
-        yt.filter('mp4')[0]
+        video = yt.filter('mp4')[0]
+    
+        print(video)
 
-        video = yt.get('mp4')
         video.download('./games')
-        print('here')
+
     except:
         written = False
-    '''
+
 
     if written:
         X = extract_features('./games/game_'+str(i) +'.mp4', size, 1)
@@ -110,3 +88,5 @@ for i,game in enumerate(games):
 
         # delete file
         os.system(rm.format('./games/game_'+str(i) +'.mp4'))
+
+        j+=1

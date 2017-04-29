@@ -22,7 +22,8 @@ def download_video(url):
         with open(fn, 'wb') as f:
         
             f.write(r.content)
-    
+            f.flush()
+
         time.sleep(18)
     except:
         written = False
