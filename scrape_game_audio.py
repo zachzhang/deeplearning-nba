@@ -56,6 +56,7 @@ games = ['https://www.youtube.com/watch?v=' + x for x in games ]
 
 size = (50,50)
 
+cmd= 'ffmpeg -ac 1 -i {} {}'
 rm = 'rm {}'
 j= 0
 
@@ -63,7 +64,7 @@ for i,game in enumerate(games):
 
     written = True
    
-    if j > 30:
+    if j > 20:
         break
 
     try:
@@ -82,10 +83,12 @@ for i,game in enumerate(games):
 
 
     if written:
-        X = extract_features('./games/game_'+str(i) +'.mp4', size, 1)
 
-        # save
-        np.save('./games/game_'+str(i) + '.npy', X)
+        fn = './games/game_'+str(i) +'.mp4'
+
+        new_fn = 'game_'+str(i)+'.wav'
+
+        os.system(cmd.format(fn,'./games_audio/' +new_fn))
 
         # delete file
         os.system(rm.format('./games/game_'+str(i) +'.mp4'))

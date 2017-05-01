@@ -100,7 +100,7 @@ pointer = 0
 
 IMG_SIZE= (50,50)
 
-cmd= 'ffmpeg -y -i {} -r 5 -s 50x50  {}'
+cmd= 'ffmpeg -ac 1 -i {} {}'
 rm = 'rm {}'
 
 
@@ -108,7 +108,7 @@ rm = 'rm {}'
 Get the urls of the right files first
 '''
 
-for i in range(60):
+for i in range(30):
 
     if i == 0:
         base_url = home_url
@@ -154,12 +154,10 @@ for i in range(60):
         fn , written = download_video(vid_file[0])
 
         if written:
-            
-            #get the features
-            X = extract_features(fn,IMG_SIZE, sample_rate =1)
 
-            #save
-            np.save(fn.split('.mp4')[0] + '.npy' , X  )
+            new_fn = fn.split('/')[-1].split('.mp4')[0]+'.wav'
+
+            os.system(cmd.format(fn,'./commerical_audio/' +new_fn))
 
             #delete file
             os.system(rm.format(fn))

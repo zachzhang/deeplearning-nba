@@ -13,7 +13,9 @@ from sklearn.model_selection import train_test_split
 from model import *
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import precision_recall_curve
+from utils import *
 
+'''
 X = np.load('X.npy') / 255.
 X = np.transpose(X, (0,3,1,2))
 
@@ -21,6 +23,10 @@ y = np.load('y.npy')
 
 #CHANGE TO CHECK FOR NOVEL COMMERICALS
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+'''
+
+X_train, X_test, y_train, y_test = load_data()
+
 
 train_loader = data.TensorDataset(torch.from_numpy(X_train), torch.from_numpy(y_train))
 test_loader = data.TensorDataset(torch.from_numpy(X_test), torch.from_numpy(y_test))
@@ -29,6 +35,7 @@ train_loader = data.DataLoader(train_loader, batch_size=64, shuffle=True, pin_me
 test_loader = data.DataLoader(test_loader, batch_size=64, shuffle=False, pin_memory=False)
 
 model = ConvNet()
+
 #model = torch.load(open('model.p','rb'))
 
 
@@ -111,9 +118,11 @@ def test():
     np.save('a.npy',y_test)
     np.save('b.npy',y_pred)
 
+
 #test()
 
-for i in range(1):
+
+for i in range(5):
 
     train()
     test()

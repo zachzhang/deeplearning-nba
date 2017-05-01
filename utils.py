@@ -60,9 +60,6 @@ def load_data():
     train_perm = np.random.permutation(X_train.shape[0])
     test_perm =  np.random.permutation(X_test.shape[0])
 
-    print( (X_train.sum(axis=(1,2,3))==0 ).sum() , X_train.shape[0] )
-
     return X_train[train_perm], X_test[test_perm], y_train[train_perm] , y_test[test_perm]
 
 
-a,b,c,d = load_data()
