@@ -8,6 +8,9 @@ import os
 from scipy.misc import imresize
 import numpy as np
 import requests
+from python_speech_features import mfcc
+import scipy.io.wavfile as wav
+
 
 '''
 Get The Actual MP4s For NBA GAMES
@@ -64,7 +67,7 @@ for i,game in enumerate(games):
 
     written = True
    
-    if j > 20:
+    if j > 40:
         break
 
     try:
@@ -78,19 +81,29 @@ for i,game in enumerate(games):
 
         video.download('./games')
 
-    except:
-        written = False
-
-
-    if written:
 
         fn = './games/game_'+str(i) +'.mp4'
-
         new_fn = 'game_'+str(i)+'.wav'
 
+        # get .wav
         os.system(cmd.format(fn,'./games_audio/' +new_fn))
 
-        # delete file
+        # delete video file
         os.system(rm.format('./games/game_'+str(i) +'.mp4'))
 
+        # read wav
+        fs,x = wav.read('./games_audio/' +new_fn)
+
+        #mfcc coefs
+        mel= mfcc(x[:,0],fs)
+
+        #save mfcc
+        np.save('./games_audio/game_'+str(i)+'.npy' , mel.astype(np.float32))
+
+        #remove .wav
+        os.system(rm.format( './games_audio/' +new_fn ) )
+
         j+=1
+
+    except:
+        pass

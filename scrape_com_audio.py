@@ -8,7 +8,8 @@ import os
 from scipy.misc import imresize
 import numpy as np
 import cv2 as cv
-
+from python_speech_features import mfcc
+import scipy.io.wavfile as wav
 
 def download_video(url):
 
@@ -108,7 +109,7 @@ rm = 'rm {}'
 Get the urls of the right files first
 '''
 
-for i in range(30):
+for i in range(60):
 
     if i == 0:
         base_url = home_url
@@ -155,11 +156,23 @@ for i in range(30):
 
         if written:
 
-            new_fn = fn.split('/')[-1].split('.mp4')[0]+'.wav'
+            try:
 
-            os.system(cmd.format(fn,'./commerical_audio/' +new_fn))
+                base_fn =fn.split('/')[-1].split('.mp4')[0]
+                new_fn = base_fn+'.wav'
 
-            #delete file
-            os.system(rm.format(fn))
+                os.system(cmd.format(fn,'./commerical_audio/' +new_fn))
+
+                os.system(rm.format(fn))
+
+                fs,x = wav.read('./commerical_audio/' +new_fn)            
+
+                mel= mfcc(x[:,0],fs)
+
+                np.save( './commerical_audio/' + base_fn +'.npy' , mel.astype(np.float32))
+
+                os.system(rm.format( './commerical_audio/' + +new_fn))
+            except:
+                pass
 
         time.sleep(6)
