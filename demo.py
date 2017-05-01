@@ -33,11 +33,11 @@ while(True):
     # Capture frame-by-frame
     ret, frame = cap.read()
 
-    if i % fps == 0:
+    if i % (1*fps) == 0:
 
         x = np.zeros((1,size[0],size[1],3))
         x[0] = imresize(frame,size)
-        x = x.transpose((0,3,1,2)) / 255.
+        x = x.transpose((0,3,1,2)) 
 
         x  = Variable(torch.from_numpy(x)).float()
 
@@ -47,10 +47,19 @@ while(True):
 
         #y_hat = (y_hat.data.numpy()[0]  > 1e-16) * 1
 
-        y_hat = (y_hat.data.numpy()[0]  > .008) * 1
+        y_hat = (y_hat.data.numpy()[0]  > .7) * 1
 
         label = 'GAME' if y_hat > 0 else 'COMMERICAL'
-    
+
+        #cv2.imshow('frame',imresize(frame,size))
+
+        #cv2.namedWindow('image',cv2.WINDOW_NORMAL)
+
+        #cv2.imshow('frame',imresize(frame,size))
+        #cv2.resizeWindow('frame', 600,600)
+
+        #cv2.imshow('frame',imresize(imresize(frame,size),(600,600) ) )
+
 
     font = cv2.FONT_HERSHEY_SIMPLEX
     cv2.putText(frame,label,(100,100), font, 2,(255,255,255),2,cv2.LINE_AA)
