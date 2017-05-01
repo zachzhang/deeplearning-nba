@@ -16,4 +16,4 @@ module load pytorch/intel/20170125
 
 cd /home/zz1409/deeplearning-nba
 
-python train.py
+python train_audio.py

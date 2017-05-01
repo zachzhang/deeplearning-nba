@@ -1,5 +1,6 @@
 *.mp4
 *.wav
+*.pyc
 *.mp3
 *.p
 *.npy

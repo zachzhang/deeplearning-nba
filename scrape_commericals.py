@@ -48,8 +48,6 @@ for url in video_urls:
         command = 'ffmpeg -y -i {} -vf scale=iw*.5:ih*.5 {}'
         rm = 'rm {}'
 
-        
-
         time.sleep(18)
 
     except:

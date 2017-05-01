@@ -108,7 +108,7 @@ def test():
 # test()
 
 
-for i in range(5):
+for i in range(3):
     train()
     test()
     torch.save(model, open('model.p', 'wb'))

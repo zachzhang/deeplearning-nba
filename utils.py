@@ -124,6 +124,11 @@ def load_audio(length= 1):
     y_train = np.vstack(y_train)
     y_test = np.vstack(y_test)
 
+    max_ = np.abs( X_train ).max()
+    
+    X_train = X_train / max_
+    X_test = X_test / max_
+
     train_perm = np.random.permutation(X_train.shape[0])
     test_perm = np.random.permutation(X_test.shape[0])
 
