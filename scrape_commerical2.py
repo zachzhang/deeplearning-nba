@@ -13,7 +13,7 @@ import cv2 as cv
 def download_video(url):
 
     fn = url.split('/')[-1].split('mp4')[0]
-    fn = './commericals/' + fn + '.mp4'
+    fn = '/scratch/zz1409/commericals/' + fn + '.mp4'
 
     written = True
 
@@ -23,21 +23,8 @@ def download_video(url):
 
         f.write(r.content)
 
-        time.sleep(18)
+        time.sleep(60)
 
-
-    '''
-    try:
-        r = requests.get(url)
-        with open(fn, 'wb') as f:
-        
-            f.write(r.content)
-
-        time.sleep(18)
-    except:
-        written = False
-    
-    '''
     return fn,written
 
 
@@ -78,16 +65,16 @@ def extract_features(file,size, sample_rate):
     return(X)
 
 proxies = [
-    '138.128.225.235:80:zachproxy:zachariah36',
-    '154.16.33.132:80:zachproxy:zachariah36',
-    '107.175.34.13:80:zachproxy:zachariah36',
-    '104.168.68.223:80:zachproxy:zachariah36',
-    '107.175.32.115:80:zachproxy:zachariah36',
-    '138.128.225.216:80:zachproxy:zachariah36',
-    '138.128.225.190:80:zachproxy:zachariah36',
-    '107.175.34.7:80:zachproxy:zachariah36',
-    '154.16.27.97:80:zachproxy:zachariah36',
-    '155.94.218.68:80:zachproxy:zachariah36'
+        '104.168.75.25:80:zachzhang:zachariah36',
+        '130.185.153.132:80:zachzhang:zachariah36',
+        '104.168.75.27:80:zachzhang:zachariah36',
+        '109.230.220.122:80:zachzhang:zachariah36',
+        '107.175.37.227:80:zachzhang:zachariah36',
+        '107.175.33.210:80:zachzhang:zachariah36',
+        '109.230.220.172:80:zachzhang:zachariah36',
+        '104.168.75.8:80:zachzhang:zachariah36',
+        '104.168.75.191:80:zachzhang:zachariah36',
+        '109.230.220.158:80:zachzhang:zachariah36',
 ]
 
 ua = UserAgent()
@@ -108,7 +95,9 @@ rm = 'rm {}'
 Get the urls of the right files first
 '''
 
-for i in range(60):
+for i in range(500):
+
+    print(i)
 
     if i == 0:
         base_url = home_url
@@ -145,23 +134,10 @@ for i in range(60):
 
         pickle.dump(video_urls , open('video_urls.p','wb'))
 
-        print(vid_file)
 
         if len(vid_file) == 0:
             continue
 
         #DOWNLOAD THE VIDEO
         fn , written = download_video(vid_file[0])
-
-        if written:
-            
-            #get the features
-            X = extract_features(fn,IMG_SIZE, sample_rate =1)
-
-            #save
-            np.save(fn.split('.mp4')[0] + '.npy' , X  )
-
-            #delete file
-            os.system(rm.format(fn))
-
         time.sleep(6)

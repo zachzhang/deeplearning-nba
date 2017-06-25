@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH --nodes=1
-#SBATCH --mem=128GB
+#SBATCH --mem=50GB
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=8
-#SBATCH --job-name=nba
-#SBATCH --time=8:00:00
-
+#SBATCH --cpus-per-task=4
+#SBATCH --job-name=nba_train
+#SBATCH --time=2:00:00
+#SBATCH --gres=gpu:1
 
 module purge
 module load python/intel/2.7.12

@@ -74,18 +74,17 @@ class AudioConvNet(torch.nn.Module):
         ConvBNLayer = self.ConvBNLayer
 
         conv = torch.nn.Sequential()
-        #conv.add_module(module=nn.BatchNorm1d(13*4), name='bn_')
-        ConvBNLayer(conv, 13*4, 64, 3)
-        ConvBNLayer(conv, 64, 64, 3)
+        ConvBNLayer(conv, 13, 32, 3)
+        ConvBNLayer(conv, 32, 32, 3)
         conv.add_module(module=nn.MaxPool1d(2), name='max1')  # use stride ?
+        ConvBNLayer(conv, 32, 64, 3)
+        ConvBNLayer(conv, 64, 64, 3)
+        conv.add_module(module=nn.MaxPool1d(2), name='max2')  # use stride ?
         ConvBNLayer(conv, 64, 128, 3)
         ConvBNLayer(conv, 128, 128, 3)
-        conv.add_module(module=nn.MaxPool1d(2), name='max2')  # use stride ?
+        conv.add_module(module=nn.MaxPool1d(2), name='max3')  # use stride ?
         ConvBNLayer(conv, 128, 256, 3)
         ConvBNLayer(conv, 256, 256, 3)
-        conv.add_module(module=nn.MaxPool1d(2), name='max3')  # use stride ?
-        ConvBNLayer(conv, 256, 512, 3)
-        ConvBNLayer(conv, 512, 512, 3)
         conv.add_module(module=nn.MaxPool1d(2), name='max4')
 
         conv.add_module(module=nn.AvgPool1d(6), name='global_avg')
@@ -93,23 +92,35 @@ class AudioConvNet(torch.nn.Module):
         #ConvBNLayer(conv, 512, 512, 3)
         #conv.add_module(module=nn.MaxPool1d(6), name='max5')
 
-        conv.add_module(module=nn.Conv1d(in_channels=512, out_channels=1, kernel_size=1),
+        #self.fc1 = nn.Conv1d(in_channels=1024, out_channels=1024, kernel_size=1)
+        #self.bn = nn.BatchNorm1d(1024)
+        #self.drop = nn.Dropout(.5)
+        
+
+        #self.out = nn.Conv1d(in_channels=1024, out_channels=1, kernel_size=1)
+
+        conv.add_module(module=nn.Conv1d(in_channels=256, out_channels=1,bias=False, kernel_size=1),
                          name='output')
 
-        conv.add_module(module=nn.Sigmoid(), name='y')
-
+        #conv.add_module(module=nn.Sigmoid(), name='y')
 
         self.conv = conv
 
     def forward(self, x):
 
-        #y_hat = self.conv(x)
-        y_hat = self.conv(x).squeeze()
+        static,d1,d2,d3 = torch.split(x,13,dim=1)
 
-        return y_hat
+        static = self.conv(static.contiguous())
 
+        d1 = self.conv(d1.contiguous())
+        d2 = self.conv(d2.contiguous())
+        d3 = self.conv(d3.contiguous())
+
+        y_hat = ((static + d1+ d2+d3) / 4.).squeeze()
+        #y_hat = self.out(h).squeeze()
+
+        return F.sigmoid(y_hat)
 
 model= AudioConvNet()
 
-print(model.forward(Variable(torch.randn(64,4*13,100))).size())
-
+print(model.forward(Variable(torch.randn(64,13*4,100))).size())

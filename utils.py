@@ -1,6 +1,6 @@
 import numpy as np
 import time 
-
+from python_speech_features import delta
 import os
 
 def load_data():
@@ -75,6 +75,15 @@ def split_audio(mel,l=1):
 
     return flatten
 
+def add_delta(mel):
+
+    d1 =delta(mel, 3)
+    d2 =delta(mel, 11)
+    d3 =delta(mel, 19)
+
+    return np.hstack([mel,d1,d2,d3])
+    
+
 def load_audio(length= 1):
     games = os.listdir('./games_audio')
     coms = os.listdir('./commerical_audio')
@@ -88,11 +97,13 @@ def load_audio(length= 1):
 
     for i, game in enumerate(games):
 
-        try:
+        #try:
+
 
             x = np.load('./games_audio/' + game)
+            x = add_delta(x)
             x = split_audio(x,l=length)
-
+            
             if i < game_split:
                 X_train.append(x)
                 y_train.append(np.ones((x.shape[0], 1)))
@@ -100,13 +111,14 @@ def load_audio(length= 1):
             else:
                 X_test.append(x)
                 y_test.append(np.ones((x.shape[0], 1)))
-        except:
-            pass
+        #except:
+        #    pass
 
     for i, com in enumerate(coms):
 
         try:
             x = np.load('./commerical_audio/' + com)
+            x = add_delta(x)
             x = split_audio(x,l=length)
 
             if i < com_split:
@@ -125,12 +137,19 @@ def load_audio(length= 1):
     y_test = np.vstack(y_test)
 
     max_ = np.abs( X_train ).max()
-    
-    X_train = X_train / max_
-    X_test = X_test / max_
 
     train_perm = np.random.permutation(X_train.shape[0])
     test_perm = np.random.permutation(X_test.shape[0])
 
+
     return X_train[train_perm], X_test[test_perm], y_train[train_perm], y_test[test_perm]
+
+'''
+X_train, X_test, y_train, y_test = load_audio(length= 1)
+
+np.save( 'X_train.npy' ,X_train.astype(np.float16))
+np.save( 'X_test.npy' ,X_test.astype(np.float16))
+np.save( 'y_train.npy' ,y_train.astype(np.float16))
+np.save( 'y_test.npy' ,y_test.astype(np.float16))
+'''
 

@@ -49,8 +49,10 @@ def extract_features(file, size, sample_rate):
     return (X)
 
 
-nba_replays = 'https://www.youtube.com/channel/UC0rDNVMafPWtpY63vFbxC3A/videos'
-html = requests.get(nba_replays)
+youtube_page= 'https://www.youtube.com/user/NFL/search?query=full+game'
+
+#youtube_page = 'https://www.youtube.com/channel/UC0rDNVMafPWtpY63vFbxC3A/videos'
+html = requests.get(youtube_page)
 games = [ x.split('"')[0] for x in html.text.split('"/watch?v=')  ][1:]
 games = ['https://www.youtube.com/watch?v=' + x for x in games ]
 
@@ -59,6 +61,10 @@ size = (50,50)
 rm = 'rm {}'
 j= 0
 
+for game in games:
+    print(game)
+
+'''
 for i,game in enumerate(games):
 
     written = True
@@ -80,6 +86,8 @@ for i,game in enumerate(games):
     except:
         written = False
 
+'''
+'''
 
     if written:
         X = extract_features('./games/game_'+str(i) +'.mp4', size, 1)
@@ -91,3 +99,4 @@ for i,game in enumerate(games):
         os.system(rm.format('./games/game_'+str(i) +'.mp4'))
 
         j+=1
+''' 

@@ -34,10 +34,9 @@ test_loader = data.TensorDataset(torch.from_numpy(X_test), torch.from_numpy(y_te
 train_loader = data.DataLoader(train_loader, batch_size=64, shuffle=True, pin_memory=False)
 test_loader = data.DataLoader(test_loader, batch_size=64, shuffle=False, pin_memory=False)
 
-model = ConvNet()
+#model = ConvNet()
 
-#model = torch.load(open('model.p','rb'))
-
+model = torch.load('model.p')
 
 
 opt = optim.Adam(model.parameters(), lr=0.001)
@@ -122,7 +121,7 @@ def test():
 #test()
 
 
-for i in range(5):
+for i in range(8):
 
     train()
     test()

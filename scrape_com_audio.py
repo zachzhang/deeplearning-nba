@@ -26,19 +26,6 @@ def download_video(url):
 
         time.sleep(18)
 
-
-    '''
-    try:
-        r = requests.get(url)
-        with open(fn, 'wb') as f:
-        
-            f.write(r.content)
-
-        time.sleep(18)
-    except:
-        written = False
-    
-    '''
     return fn,written
 
 
@@ -109,7 +96,7 @@ rm = 'rm {}'
 Get the urls of the right files first
 '''
 
-for i in range(60):
+for i in range(60,120):
 
     if i == 0:
         base_url = home_url
@@ -167,7 +154,10 @@ for i in range(60):
 
                 fs,x = wav.read('./commerical_audio/' +new_fn)            
 
-                mel= mfcc(x[:,0],fs)
+                if len(x.shape)==2:
+                    mel= mfcc(x[:,0],fs)
+                else:
+                    mel= mfcc(x,fs)
 
                 np.save( './commerical_audio/' + base_fn +'.npy' , mel.astype(np.float32))
 
