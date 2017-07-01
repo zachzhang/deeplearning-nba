@@ -13,5 +13,7 @@ module load opencv/intel/2.4.13.2
 
 cd /home/zz1409/deeplearning-nba
 
-#python preprocess_videos.py
-python scrape_football.py
+python preprocess_videos.py
+
+#python scrape_football.py
+#python scrape_basketball.py

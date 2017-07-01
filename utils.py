@@ -3,10 +3,10 @@ import time
 from python_speech_features import delta
 import os
 
-def load_data():
+def load_data(game_dir,com_dir):
 
-    games = os.listdir('./games')
-    coms = os.listdir('./commericals')
+    games = os.listdir(games)
+    coms = os.listdir(com_dir)
 
     game_split = int(np.floor( len(games)*.8 ))
     com_split = int(np.floor( len(coms)*.8 ))
@@ -50,9 +50,8 @@ def load_data():
 
     X_train = np.vstack(X_train)
     X_test = np.vstack(X_test)
-    
-    X_train = np.transpose(X_train, (0,3,1,2))
-    X_test = np.transpose(X_test, (0,3,1,2)) 
+    #X_train = np.transpose(X_train, (0,3,1,2))
+    #X_test = np.transpose(X_test, (0,3,1,2)) 
 
     y_train = np.vstack(y_train)
     y_test = np.vstack(y_test)

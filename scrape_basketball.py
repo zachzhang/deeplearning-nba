@@ -33,7 +33,7 @@ for i,game in enumerate(games):
     try:
         yt = YouTube(game)
 
-        fn = game.split('"/watch?v=')[1]
+        fn = game.split('/watch?v=')[1]
         yt.set_filename(fn)
 
         video = yt.filter('mp4')[0]
@@ -47,4 +47,4 @@ for i,game in enumerate(games):
 
     if written:
 
-        os.system(cmd.format(base_dir + fn, base_dir + fn))
+        os.system(cmd.format(base_dir + fn + '.mp4', base_dir + fn+'.mp4'))

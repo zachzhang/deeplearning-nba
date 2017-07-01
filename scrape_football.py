@@ -35,7 +35,7 @@ for i,game in enumerate(games):
     try:
         yt = YouTube(game)
 
-        fn = game.split('"/watch?v=')[1]
+        fn = game.split('/watch?v=')[1]
         yt.set_filename(fn)
 
         video = yt.filter('mp4')[0]

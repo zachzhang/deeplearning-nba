@@ -10,20 +10,20 @@ import numpy as np
 import cv2 as cv
 
 
-def download_video(url):
+def download_video(url,headers):
 
     fn = url.split('/')[-1].split('mp4')[0]
     fn = '/scratch/zz1409/commericals/' + fn + '.mp4'
 
     written = True
 
-    r = requests.get(url)
+    r = requests.get(url,headers,verify=False)
 
     with open(fn, 'wb') as f:
 
         f.write(r.content)
 
-        time.sleep(60)
+        time.sleep(70)
 
     return fn,written
 
@@ -108,7 +108,7 @@ for i in range(500):
     proxy = {"http": proxies[pointer % len(proxies)]}
     pointer += 1
 
-    rsp = requests.get(base_url, headers=headers)
+    rsp = requests.get(base_url, headers=headers,verify=False)
     time.sleep(6)
 
     soup = BeautifulSoup(rsp.content)
@@ -122,7 +122,7 @@ for i in range(500):
         proxy = {"http": proxies[pointer % len(proxies)]}
         pointer += 1
 
-        r = requests.get(url_prefix + vid_link, headers=headers)
+        r = requests.get(url_prefix + vid_link, headers=headers,verify=False)
 
         vid_page = BeautifulSoup(r.content)
 
@@ -138,6 +138,11 @@ for i in range(500):
         if len(vid_file) == 0:
             continue
 
+        headers = {"Connection": "close", "User-Agent": ua.random}
+        proxy = {"http": proxies[pointer % len(proxies)]}
+        pointer += 1
+
         #DOWNLOAD THE VIDEO
-        fn , written = download_video(vid_file[0])
+        
+        fn , written = download_video(vid_file[0],headers)
         time.sleep(6)
