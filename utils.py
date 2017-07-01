@@ -5,7 +5,7 @@ import os
 
 def load_data(game_dir,com_dir):
 
-    games = os.listdir(games)
+    games = os.listdir(game_dir)
     coms = os.listdir(com_dir)
 
     game_split = int(np.floor( len(games)*.8 ))
