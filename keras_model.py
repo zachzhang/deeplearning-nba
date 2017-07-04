@@ -27,26 +27,24 @@ def CNN():
     ConvBNLayer(128)
     model.add(MaxPooling2D(pool_size=(2, 2)))
 
-    ConvBNLayer(256)
+    #ConvBNLayer(256)
     ConvBNLayer(256)
     model.add(MaxPooling2D(pool_size=(2, 2)))
 
-    ConvBNLayer(512)
+    #ConvBNLayer(512)
     ConvBNLayer(512)
     model.add(MaxPooling2D(pool_size=(2, 2)))
 
     model.add(Flatten())
-    model.add(Dense(512, activation='relu'))
+    model.add(Dense(512, activation='relu',bias=False))
     model.add(BatchNormalization(axis=1))
     model.add(Dropout(p))
-    model.add(Dense(1, activation='sigmoid'))
+    model.add(Dense(1, activation='sigmoid',bias=False))
 
     start = time.time()
-    print(model.predict(np.ones((64, 50, 50, 3))).shape)
-    print(time.time() - start)
 
     model.compile(loss='binary_crossentropy',
                   optimizer='adam',
-                  metrics=['binary_accuracy'])
+                  metrics=['accuracy'])
 
     return model

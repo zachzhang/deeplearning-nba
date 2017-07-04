@@ -11,6 +11,7 @@ module load python/intel/2.7.12
 module load opencv/intel/2.4.13.2 
 module load tensorflow/python2.7/20170201
 module load keras/2.0.2
+module load h5py/intel/2.7.0rc2
 
 cd /home/zz1409/deeplearning-nba
 

@@ -11,17 +11,17 @@ from utils import *
 
 
 game_dir= '/scratch/zz1409/old_data/games/games/'
-com_dir= '/scratch/zz1409/old_data/coms/commericials/'
 
-#X_train, X_test, y_train, y_test  = load_data(game_dir,com_dir)
+com_dir ='/scratch/zz1409/old_data/coms/commericals/'
+X_train, X_test, y_train, y_test  = load_data(game_dir,com_dir)
 
 model = CNN()
+#model.load_weights("nba_model.h5")
 
-#model.fit(X_train, Y_train,
-#          batch_size=64, nb_epoch=10, verbose=1)
+model.fit(X_train, y_train,batch_size=64, nb_epoch=12, verbose=1, validation_data = (X_test,y_test))
 
-#score = model.evaluate(X_test, Y_test, verbose=0)
+score = model.evaluate(X_test, y_test, verbose=0)
 
-#print(score)
+print(score)
 
-model.save_weights("dummy_model.h5")
+model.save_weights("nba_model.h5")

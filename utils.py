@@ -23,7 +23,7 @@ def load_data(game_dir,com_dir):
 
         try:
 
-            x = np.load('./games/'+game)
+            x = np.load(game_dir+game)
             
             if i < game_split:
                 X_train.append(x)
@@ -38,7 +38,7 @@ def load_data(game_dir,com_dir):
     for i,com in enumerate(coms):
         
         try:
-            x  = np.load('./commericals/'+com)
+            x  = np.load(com_dir+com)
             if i < com_split:
                 X_train.append(x)
                 y_train.append(np.zeros((x.shape[0],1)))
@@ -53,6 +53,7 @@ def load_data(game_dir,com_dir):
     #X_train = np.transpose(X_train, (0,3,1,2))
     #X_test = np.transpose(X_test, (0,3,1,2)) 
 
+    print(X_train.shape)
     y_train = np.vstack(y_train)
     y_test = np.vstack(y_test)
 
