@@ -1,5 +1,5 @@
 #LIVE DEMO
-
+import time
 from scipy.misc import imresize
 import torch.utils.data as data
 import pickle 
@@ -23,6 +23,8 @@ cap = cv2.VideoCapture('demo.mp4')
 
 fps= int( cap.get(cv2.CAP_PROP_FPS ))
 
+fps = 64
+
 size= (50,50)
 
 i = 0
@@ -35,6 +37,8 @@ while(True):
 
     if i % (1*fps) == 0:
 
+        start = time.time()
+
         x = np.zeros((1,size[0],size[1],3))
         x[0] = imresize(frame,size)
         x = x.transpose((0,3,1,2)) 
@@ -45,23 +49,15 @@ while(True):
 
         print(y_hat.data.numpy()[0])
 
-        #y_hat = (y_hat.data.numpy()[0]  > 1e-16) * 1
 
         y_hat = (y_hat.data.numpy()[0]  > .7) * 1
 
         label = 'GAME' if y_hat > 0 else 'COMMERICAL'
 
-        #cv2.imshow('frame',imresize(frame,size))
-
-        #cv2.namedWindow('image',cv2.WINDOW_NORMAL)
-
-        #cv2.imshow('frame',imresize(frame,size))
-        #cv2.resizeWindow('frame', 600,600)
-
-        #cv2.imshow('frame',imresize(imresize(frame,size),(600,600) ) )
-
+        print(time.time() - start)
 
     font = cv2.FONT_HERSHEY_SIMPLEX
+
     cv2.putText(frame,label,(100,100), font, 2,(255,255,255),2,cv2.LINE_AA)
 
     # Display the resulting frame
