@@ -6,59 +6,104 @@ import numpy as np
 from scipy.misc import imresize
 import cv2
 from keras_model import *
+from multiprocessing import Process
+import threading
+from multiprocessing import Queue
+import time
 
-## model = torch.load(open('model.p', 'rb'))
+q = Queue()
 
-model = CNN()
-model.load_weights('nba_model_small.h5')
+global LABEL
+LABEL = 'GAME'
 
-cap = cv2.VideoCapture('demo.mp4')
+global CURRENT_FRAME
+CURRENT_FRAME = np.zeros((1,50,50,3))
 
-fps = int(cap.get(cv2.CAP_PROP_FPS))
+def img_processing(q):
 
-fps = 64
+    model = CNN()
+    model.load_weights('nba_model_small.h5')
+    size = (50, 50)
+    while True:
 
-size = (50, 50)
 
-i = 0
+        frame = CURRENT_FRAME
+        X = np.expand_dims(imresize(frame, size), 0)
+        y_hat = model.predict(X)[0]
 
-while (True):
-    # Capture frame-by-frame
-    ret, frame = cap.read()
+        print(y_hat)
 
-    if i % (1 * fps) == 0:
-        start = time.time()
+        global LABEL
 
-        x = np.zeros((1, size[0], size[1], 3))
-        x[0] = imresize(frame, size)
+        if y_hat > .7:
+            LABEL = 'GAME'
+        else:
+            LABEL = 'COMMERICAL'
 
-        y_hat = model.predict(x)[0]
+        time.sleep(1)
 
-        print(y_hat[0])
+        '''
+        if ~q.empty():
 
-        y_hat = (y_hat.data.numpy()[0] > .7) * 1
+            frame = q.get()
+            X = np.expand_dims(imresize(frame, size),0)
+            y_hat = model.predict(X)[0]
 
-        label = 'GAME' if y_hat > 0 else 'COMMERICAL'
+            print(y_hat)
 
-        print(time.time() - start)
+            global LABEL
 
-    font = cv2.FONT_HERSHEY_SIMPLEX
+            if y_hat > .7:
+                LABEL = 'GAME'
+            else:
+                LABEL = 'COMMERICAL'
 
-    cv2.putText(frame, label, (100, 100), font, 2, (255, 255, 255), 2, cv2.LINE_AA)
+        else:
+            time.sleep(1)
 
-    # Display the resulting frame
-    cv2.imshow('frame', frame)
+        '''
 
-    i += 1
+def cap_video(q):
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+    #cap = cv2.VideoCapture('demo.mp4')
+    cap = cv2.VideoCapture('./commerical.mp4')
 
-        # if i > 100:
+    fps = 32
 
-        #    break
+    i = 0
+    global CURRENT_FRAME
 
-# When everything done, release the capture
-cap.release()
-cv2.destroyAllWindows()
+    while (True):
+        # Capture frame-by-frame
+        ret, frame = cap.read()
 
+
+        #if i % (1 * fps) == 0 and ~q.full():
+        #    CURRENT_FRAME = frame
+            #q.put(frame)
+
+
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        cv2.putText(frame, LABEL, (100, 100), font, 2, (255, 255, 255), 2, cv2.LINE_AA)
+
+        cv2.imshow('frame', frame)
+        i += 1
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+
+
+#cv2.namedWindow("Right View")
+
+#img_proc = threading.Thread(target=img_processing, args = (q,))
+#img_proc.start()
+
+cap_video(q)
+
+
+#vid_cap_thread = threading.Thread(target=cap_video, args = (q,))
+#vid_cap_thread.start()
